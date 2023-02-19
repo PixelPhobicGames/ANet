@@ -16,6 +16,7 @@ OrderCounter = 0
 
 ServerBalanceInfo = { 
     # Balance Dictionary
+    "VDZM XLOV":"2000000000000"
 }
 
 def CheckItem(Dictionary, Item):
