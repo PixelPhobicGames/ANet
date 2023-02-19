@@ -1,4 +1,5 @@
 from Encrypt import *
+from Etc import *
 
 import socket
 
@@ -16,13 +17,32 @@ class NetInfo:
         Host = PullAddress()
         Port = 12345 
 
+def Fix(Text):
+    return Text[2:len(Text)-1]
+
+def CheckServer():
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as MainSocket:
+            MainSocket.connect((NetInfo.Host, NetInfo.Port))
+            MainSocket.send(bytes(str("CHECK:"), 'utf-8'))
+            InData = MainSocket.recv(1024)
+            if (Fix(str(InData)) == "Here"):
+                return True
+            else:
+                return False
+    except:
+        return False
+
 def GetBalance():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((NetInfo.Host, NetInfo.Port))
-        s.send(bytes(str("BAL:" + UserInfo.Name), 'utf-8'))
-        InData = int(s.recv(1024))
-        
-    return InData     
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as MainSocket:
+            MainSocket.connect((NetInfo.Host, NetInfo.Port))
+            MainSocket.send(bytes(str("BAL:" + UserInfo.Name), 'utf-8'))
+            InData = int(MainSocket.recv(1024))
+            
+        return InData    
+    except:
+        return "Error"
 
 class UserInfo:
     Name = ''
@@ -36,11 +56,9 @@ def GenerateIDInfo():
     ConfFile.write(str(Encrypt(UserInfo.Name) + ":" + Encrypt(UserInfo.Number)  + ":" + Encrypt(UserInfo.Password)  + ":" + Encrypt(UserInfo.Address)))
     ConfFile.close
 
-    NetInfo.MainSocket.connect((NetInfo.Host, NetInfo.Port))
-    NetInfo.MainSocket.send(bytes(str("ADD:" + Encrypt(UserInfo.Name)), 'utf-8'))
-
-    NetInfo.MainSocket.close()    
-    NetInfo.Restart()
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as MainSocket:
+        MainSocket.connect((NetInfo.Host, NetInfo.Port))
+        MainSocket.send(bytes(str("ADD:" + Encrypt(UserInfo.Name)), 'utf-8'))
 
 def PullID():
 
@@ -55,8 +73,8 @@ def PullID():
         UserInfo.Number = Info[1]
         UserInfo.Password = Info[2]
         UserInfo.Address = Info[3]
-        
         ConfFile.close
+
         return 1
     else:
         return 0
