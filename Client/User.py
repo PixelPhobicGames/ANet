@@ -1,5 +1,6 @@
 from Encrypt import *
 from Etc import *
+from Update import *
 
 import socket
 

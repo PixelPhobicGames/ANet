@@ -164,7 +164,8 @@ def CreateAccount(sender , app_data):
         dpg.add_text("This Data will be encrypted when sent to our Servers. \n Your Identity is Completely Safe")
         dpg.add_text("")
 
-
+def UpdateShop(sender , app_data):
+    UpdateApp()
 
 def Shop(sender , app_data):
     with dpg.window(tag="ShopWindow"):
@@ -178,6 +179,7 @@ def Shop(sender , app_data):
                 dpg.add_menu_item(label="Settings" , callback=Settings)
             with dpg.menu(label="Help"):
                 dpg.add_menu_item(label="Adding ANT Balance to Account" , callback=AddHelp)
+                dpg.add_menu_item(label="Update App" , callback=UpdateShop)
         if (PullID() == 0):
             dpg.add_text("No User Data Found, Please Create an Account", pos=[CenterText("No User Data Found, Please Create an Account", dpg.get_viewport_width()), 50])
             
@@ -253,6 +255,8 @@ def Connect(sender, app_data):
             break
 
 with dpg.window(tag="Main"):
+    dpg.add_text("")
+    dpg.add_text("")
     dpg.add_text("ANet Client", pos=[CenterText("ANet Client" , dpg.get_viewport_width()), 0])
     dpg.add_text("")
     dpg.add_text("")
